@@ -103,6 +103,19 @@ CREATE TABLE IF NOT EXISTS properties
     FOREIGN KEY (ppt_type_id) REFERENCES property_types (id)
 );
 
+CREATE TABLE IF NOT EXISTS houses
+(
+    id integer NOT NULL,
+    name character varying,
+    ppt_type_id integer NOT NULL,
+    address_id integer,
+    price_id integer,
+    PRIMARY KEY (id),
+    FOREIGN KEY (price_id) REFERENCES prices (id),
+    FOREIGN KEY (address_id) REFERENCES addresses (id),    
+    FOREIGN KEY (ppt_type_id) REFERENCES property_types (id)
+);
+
 CREATE TABLE IF NOT EXISTS prices
 (
     id integer NOT NULL,
