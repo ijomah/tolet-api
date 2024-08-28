@@ -7,7 +7,12 @@ const getHouse = async (req, res) => {
     let result
     try {
         await db.transaction (async (trx) => {
-            result = await trx('houses').select();
+            result = await trx('houses')
+            .join('addresses', 'houses.id', '=', 'addresses.id')
+            .join('property_types', 'houses.id', '=', 'property_types.id')
+            .join('prices', 'houses.id', '=', 'prices.id')
+            .select('name', 'quarter', 'type', 'currency')
+            // .as('propertyName', 'propertyAddress', 'propertyType', 'propertyPrice');
             console.log('res', result)
         })
     }
@@ -22,7 +27,7 @@ const postHouse = async (req, res) => {
     const {
         propertyName, 
         propertyType, 
-        propertyAdress, 
+        propertyAddress, 
         propertyPrice
     } = req.body;
     try {
@@ -38,7 +43,7 @@ const postHouse = async (req, res) => {
                 {
                     id: pptId[0].id,
                     name: propertyName,
-                    ppt_type_id: pptId[0].id
+                    ppt_type_id: pptId[0].id,
                 }, 
                 'id'
             );
@@ -47,7 +52,7 @@ const postHouse = async (req, res) => {
 
             await trx('addresses').insert({
                 id: houseId[0].id,
-                quarter: propertyAdress 
+                quarter: propertyAddress 
             })
 
             await trx('prices').insert({
