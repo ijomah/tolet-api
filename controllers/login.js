@@ -18,24 +18,24 @@ const getLogin = async (req, res) => {
 
 
 const postLogin = async (req, res) => {
-    let { id, email, password} = req.body
-    // console.log(req.body)
+    let { email, password} = req.body
+    console.log(email)
     // let i = 0;
     if (!email || !password) {
         return res.send('Please provide email and password!')
         // throw new BadRequestError('Please provide email and password');
       }
-      if (!email || password) {
+      if (!email && password) {
         return res.send('Please provide email')
       }
-    if (email || !password) {
+    if (email && !password) {
         return res.send('Please provide password')
       }
-    if (email || password || id) {
+    if (email && password) {
         let result
     try {
         await db.transaction (async (trx) => {
-            result = await trx('auths').select().where({id: id, email: email, hash: password});
+            result = await trx('auths').select().where({email: email, hash: password});
             if (result != null && result != undefined) {
                 return res.send('true');
             } else {
@@ -46,7 +46,7 @@ const postLogin = async (req, res) => {
     catch(error){ 
         console.log('err from get', error)
     }
-    res.send(`Here is it from api, get ${result}`);
+    // res.send(`Here is it from api, get ${result}`);
     // res.send('Here is it from api, get');
 }
 }
