@@ -19,8 +19,6 @@ const postRegister = async (req, res) => {
         try {
             await db.transaction(async (trx) => {
                 postId = await trx('auths').insert({
-                    id: Math.random(3) + Math.random(7),
-                    // id: id++,
                     email: email,
                     hash: password
                 }, 'id')
