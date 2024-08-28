@@ -6,7 +6,7 @@ var port = 8000 || env.port
 
 
 var corsOptions = {
-    origin: 'false',
+    origin: ['http://192.168.137.1:5500', 'https://tolet-73ml.onrender.com', '*'],
     optionsSuccessStatus: 204 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
