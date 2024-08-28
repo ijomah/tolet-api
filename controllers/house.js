@@ -22,23 +22,34 @@ const getHouse = async (req, res) => {
     res.send(`Here is it from api, get ${result}`);
 }
 
+
 const postHouse = async (req, res) => {
+    const {
+        propertyName, 
+        propertyType, 
+        propertyAdress, 
+        propertyPrice
+    } = req.body;
     try {
         await db.transaction (async (trx) => {
+            const pptId = await trx('property_types').insert(
+                {
+                    id: parseInt(Math.random(3)),
+                    type: propertyType
+                },
+                'id'
+            );
+            
             const houseId = await trx('houses').insert(
                 {
-                    id: Math.random(3) + Math.random(7),
+                    id: pptId,
                     name: propertyName,
+                    ppt_type_id: pptId
                 }, 
                 'id'
             );
 
-            await trx('property_types').insert(
-                {
-                    id: houseId,
-                    type: propertyType
-                }
-            );
+            
 
             await trx('addresses').insert({
                 id: houseId,

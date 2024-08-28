@@ -1,10 +1,18 @@
 var express = require('express');
 var app = express()
-
+var cors = require('cors');
 var port = 8000 || env.port
 // router.use('');
 
+
+var corsOptions = {
+    origin: false,
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
+
+app.use(cors(corsOptions))
 app.use(express.json());
+
 
 //https://tolet-73ml.onrender.com
 //router

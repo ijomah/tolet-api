@@ -7,14 +7,13 @@ const getLogin = async (req, res) => {
     try {
         await db.transaction (async (trx) => {
             result = await trx('auths').select();
-            console.log('res', result)
+            // console.log('res', result)
         })
     }
     catch(error){ 
         console.log('err from get', error)
     }
     res.send(`Here is it from api, get ${result}`);
-    res.send('Here is it from api, get');
 }
 
 

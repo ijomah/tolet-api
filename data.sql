@@ -4,18 +4,16 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS auths
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     email character varying(150),
-    hash character varying(225),
-    PRIMARY KEY (id)
+    hash character varying(225)    
 );
 
 CREATE TABLE IF NOT EXISTS landlords
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     name_id integer,
-    property_id integer,
-    PRIMARY KEY (id),
+    property_id integer,    
     FOREIGN KEY (property_id) REFERENCES landlords (id),
     FOREIGN KEY (name_id) REFERENCES landlords (id)
 );
@@ -26,18 +24,16 @@ COMMENT ON TABLE public.landlords
 
 CREATE TABLE IF NOT EXISTS comments
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     comment character varying(10000),
-    time_date date,
-    PRIMARY KEY (id)
+    time_date date
 );
 
 
 CREATE TABLE IF NOT EXISTS tenants
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     comment_id integer NOT NULL,
-    PRIMARY KEY (id),
     FOREIGN KEY (comment_id) REFERENCES comments (id)
 );
 
@@ -46,48 +42,44 @@ COMMENT ON TABLE public.tenants
 
 CREATE TABLE IF NOT EXISTS property_types
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     no_of_room integer,
     flat boolean,
-    self_con boolean,
-    PRIMARY KEY (id)
+    self_con boolean
 );
 
 CREATE TABLE IF NOT EXISTS payments
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     no_of_month integer,
     type character varying(20),
     paid boolean,
-    pay_date date,
-    PRIMARY KEY (id)
+    pay_date date
 );
 
 
 CREATE TABLE IF NOT EXISTS addresses
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     number integer,
     street character varying(30),
     quarter character varying(30),
     village character varying(30),
     lga character varying(30),
     state character varying(30),
-    country character varying(30),
-    PRIMARY KEY (id)
+    country character varying(30)
 );
 
 CREATE TABLE IF NOT EXISTS credentials
 (
-    id integer NOT NULL,
-    "desc" character varying(225) NOT NULL,
-    PRIMARY KEY (id)
+    id SERIAL PRIMARY KEY,
+    "desc" character varying(225) NOT NULL
 );
 
 
 CREATE TABLE IF NOT EXISTS properties
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     available integer NOT NULL,
     ppt_type_id integer NOT NULL,
     ownership boolean NOT NULL,
@@ -96,7 +88,6 @@ CREATE TABLE IF NOT EXISTS properties
     payment_id integer,
     inspected boolean,
     inspect_date date,
-    PRIMARY KEY (id),
     FOREIGN KEY (payment_id) REFERENCES payments (id),
     FOREIGN KEY (address_id) REFERENCES addresses (id),
     FOREIGN KEY (credential_id) REFERENCES credentials (id),
@@ -105,12 +96,11 @@ CREATE TABLE IF NOT EXISTS properties
 
 CREATE TABLE IF NOT EXISTS houses
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     name character varying,
-    ppt_type_id integer NOT NULL,
+    ppt_type_id integer,
     address_id integer,
     price_id integer,
-    PRIMARY KEY (id),
     FOREIGN KEY (price_id) REFERENCES prices (id),
     FOREIGN KEY (address_id) REFERENCES addresses (id),    
     FOREIGN KEY (ppt_type_id) REFERENCES property_types (id)
@@ -118,15 +108,14 @@ CREATE TABLE IF NOT EXISTS houses
 
 CREATE TABLE IF NOT EXISTS prices
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     amount integer,
     currency character varying,
     property_id integer,
     landlord_id integer,
     tenant_id integer,
     payment_id integer,
-    PRIMARY KEY (id),
-    FOREIGN KEY (property_id) REFERENCES properties (id),
+    -- FOREIGN KEY (property_id) REFERENCES properties (id),
     FOREIGN KEY (landlord_id) REFERENCES landlords (id),
     FOREIGN KEY (tenant_id) REFERENCES tenants (id),
     FOREIGN KEY (payment_id) REFERENCES payments (id)
@@ -134,21 +123,20 @@ CREATE TABLE IF NOT EXISTS prices
 
 CREATE TABLE IF NOT EXISTS names
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     f_name character varying(20),
     m_name character varying(20),
     l_name character varying(20),
     o_name character varying(20),
     tenant_id integer,
     landlord_id integer,
-    PRIMARY KEY (id),
     FOREIGN KEY (tenant_id) REFERENCES tenants (id),
     FOREIGN KEY (landlord_id) REFERENCES landlords (id)
 );
 
 CREATE TABLE IF NOT EXISTS fees
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     agreement integer,
     commission integer,
     security integer,
@@ -157,7 +145,6 @@ CREATE TABLE IF NOT EXISTS fees
     tenant_id integer,
     landlord_id integer,
     property_id integer,
-    PRIMARY KEY (id),
     FOREIGN KEY (tenant_id) REFERENCES tenants (id),
     FOREIGN KEY (landlord_id) REFERENCES landlords (id),
     FOREIGN KEY (property_id) REFERENCES properties (id)
@@ -165,36 +152,33 @@ CREATE TABLE IF NOT EXISTS fees
 
 CREATE TABLE IF NOT EXISTS enquiries
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     detail character varying(10000),
     tenant_id integer,
     date date NOT NULL,
-    PRIMARY KEY (id),
     FOREIGN KEY (tenant_id) REFERENCES tenants (id)
 );
 
 CREATE TABLE IF NOT EXISTS chats
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     msg character varying(225),
     landlord_id integer,
     tenant_id integer,
     date_time date,
-    PRIMARY KEY (id),
     FOREIGN KEY (tenant_id) REFERENCES tenants (id),
     FOREIGN KEY (landlord_id) REFERENCES landlords (id)
 );
 
 CREATE TABLE IF NOT EXISTS pics
 (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     type character varying(15) NOT NULL,
     mime_type character varying(150) NOT NULL,
     extension character varying(10) NOT NULL,
     size character varying(10) NOT NULL,
     file_name character varying(225) NOT NULL,
     property_id integer,
-    PRIMARY KEY (id),
     FOREIGN KEY (property_id) REFERENCES properties (id)
 );
 
@@ -381,3 +365,20 @@ ALTER TABLE IF EXISTS public.chats
     NOT VALID;
 
 END;
+
+DROP TABLE auths;
+DROP TABLE landlords CASCADE;
+DROP TABLE chats CASCADE;
+DROP TABLE comments CASCADE;
+DROP TABLE credentials CASCADE;
+DROP TABLE enquiries CASCADE;
+DROP TABLE fees CASCADE;
+DROP TABLE houses CASCADE;
+DROP TABLE names CASCADE;
+DROP TABLE payments CASCADE;
+DROP TABLE pics CASCADE;
+DROP TABLE prices CASCADE;
+DROP TABLE properties CASCADE;
+DROP TABLE property_types CASCADE;
+DROP TABLE tenants CASCADE;
+DROP TABLE addresses CASCADE;
