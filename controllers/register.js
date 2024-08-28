@@ -27,7 +27,7 @@ const postRegister = async (req, res) => {
         catch (error) {
             console.log('err from login', error)
         }
-        return res.send(postId[0].id)
+        return res.send(`Post, created with id ${postId[0].id}`)
     }    
 
     
