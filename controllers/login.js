@@ -13,12 +13,12 @@ const getLogin = async (req, res) => {
     catch(error){ 
         console.log('err from get', error)
     }
-    res.send(`Here is it from api, get ${result}`);
+    res.send(`Here is it from api, get ${JSON.stringify(result)}`);
 }
 
 
 const postLogin = async (req, res) => {
-    let { email, password} = req.body
+    let {id, email, password} = req.body
     console.log(email)
     // let i = 0;
     if (!email || !password) {
@@ -35,9 +35,9 @@ const postLogin = async (req, res) => {
         let result
     try {
         await db.transaction (async (trx) => {
-            result = await trx('auths').select().where({email: email, hash: password});
-            if (result != null && result != undefined) {
-                return res.send('true');
+            result = await trx('auths').select().where('id', id);
+            if (result.length != 0) {
+                return res.send( 'true');
             } else {
                 return res.send('false');
             }
