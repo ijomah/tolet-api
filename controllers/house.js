@@ -34,7 +34,6 @@ const postHouse = async (req, res) => {
         await db.transaction (async (trx) => {
             const pptId = await trx('property_types').insert(
                 {
-                    id: parseInt(Math.random(3)),
                     type: propertyType
                 },
                 'id'
