@@ -2,24 +2,19 @@ const db = require("../db/db-connect");
 
 
 const getHouse = async (req, res) => {
-    const {
-        propertyName, 
-        propertyType, 
-        propertyAdress, 
-        propertyPrice
-    } = req.body;
+    
     // console.log('db', db);
     let result
     try {
         await db.transaction (async (trx) => {
             result = await trx('houses').select();
-            // console.log('res', result)
+            console.log('res', result)
         })
     }
     catch(error){ 
         console.log('err from get', error)
     }
-    res.send(`Here is it from api, get ${result}`);
+    res.send(`Here is it from api, get ${JSON.stringify(result)}`);
 }
 
 
@@ -41,9 +36,9 @@ const postHouse = async (req, res) => {
             
             const houseId = await trx('houses').insert(
                 {
-                    id: pptId,
+                    id: pptId[0].id,
                     name: propertyName,
-                    ppt_type_id: pptId
+                    ppt_type_id: pptId[0].id
                 }, 
                 'id'
             );
@@ -51,12 +46,12 @@ const postHouse = async (req, res) => {
             
 
             await trx('addresses').insert({
-                id: houseId,
+                id: houseId[0].id,
                 quarter: propertyAdress 
             })
 
-            await trx('price').insert({
-                id: houseId,
+            await trx('prices').insert({
+                id: houseId[0].id,
                 currency: propertyPrice
             })
             
@@ -66,7 +61,7 @@ const postHouse = async (req, res) => {
         console.log('err from post', error)
     }
     // console.log('idInsert', idInsert)
-    res.send(`Property created with this id ${houseId[0].id}`);
+    res.send(`Property created with this id`);
 }
 
 const patchHouse = (req, res) => {

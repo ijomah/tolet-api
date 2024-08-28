@@ -178,8 +178,8 @@ CREATE TABLE IF NOT EXISTS pics
     extension character varying(10) NOT NULL,
     size character varying(10) NOT NULL,
     file_name character varying(225) NOT NULL,
-    property_id integer,
-    FOREIGN KEY (property_id) REFERENCES properties (id)
+    house_id integer,
+    FOREIGN KEY (house_id) REFERENCES houses (id)
 );
 
 COMMENT ON TABLE public.properties
