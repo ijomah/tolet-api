@@ -18,8 +18,9 @@ const getHouse = async (req, res) => {
     }
     catch(error){ 
         console.log('err from get', error)
+        throw { status: 500, message: error.message || error }
     }
-    res.send(`Here is it from api, get ${JSON.stringify(result)}`);
+    res.status(200).send({status: 'OK', data: result});
 }
 
 
@@ -64,9 +65,10 @@ const postHouse = async (req, res) => {
     }
     catch(error) {
         console.log('err from post', error)
+        throw { status: 500, message: error.message || error }
     }
     // console.log('idInsert', idInsert)
-    res.send(`Property created with this id`);
+    res.status(201).send({status: 'SUCCESS'});
 }
 
 const patchHouse = (req, res) => {
